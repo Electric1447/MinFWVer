@@ -83,18 +83,27 @@ int main(int argc, char *argv[]) {
 	minfwver_user_id = sceKernelLoadStartModule(APP_PATH "minfwver_user.suprx", 0, NULL, 0, NULL, NULL);
 
 
-	SceKernelFwInfo fwinfo;
+	SceKernelFwInfo fwinfo, fwinfo2;
 	fwinfo.size = sizeof(SceKernelFwInfo);
+	fwinfo2.size = sizeof(SceKernelFwInfo);
 	_vshSblGetSystemSwVersion(&fwinfo);
+	sceKernelGetSystemSwVersion(&fwinfo2);
 
 	unsigned int current_version = (unsigned int)fwinfo.version;
 	unsigned int factory_version = minfwver_get_factory_firmware();
+	unsigned int spoofed_version = (unsigned int)fwinfo2.version;;
 
-	char current_fw[8], factory_fw[8];
+	char current_fw[8], factory_fw[8], spoofed_fw[8];
 	firmware_string(current_fw, current_version);
 	firmware_string(factory_fw, factory_version);
+	firmware_string(spoofed_fw, spoofed_version);
 
 	printf("Firmware information:\n");
+	printf(" - Spoofed firmware: ");
+	psvDebugScreenSetTextColor(YELLOW);
+	printf("%s", spoofed_fw);
+	psvDebugScreenSetTextColor(WHITE);
+	printf("\n");
 	printf(" - Current firmware: ");
 	psvDebugScreenSetTextColor(YELLOW);
 	printf("%s", current_fw);
