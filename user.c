@@ -1,5 +1,4 @@
-/* user.c -- psp2swu patches
- *
+/*
  * Copyright (C) 2019 TheFloW
  *
  * This software may be modified and distributed under the terms
