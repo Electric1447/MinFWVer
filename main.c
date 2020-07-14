@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 	psvDebugScreenInit();
 	sceKernelPowerLock(0);
 
-	printf("-- Min Firmware Version Checker v1.0\n");
+	printf("-- Min Firmware Version Checker v1.1\n");
 	printf("   MinFWVer by Electric1447, factory firmware code by TheFloW\n\n");
 
 	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030) {
