@@ -58,5 +58,3 @@ config.yml
 
 # project specific
 minfwver
-minfwver_kernel_stubs/
-minfwver_user_stubs/
