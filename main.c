@@ -10,7 +10,6 @@
 #include <psp2/ctrl.h>
 #include <psp2/vshbridge.h>
 #include <psp2/kernel/modulemgr.h>
-#include <taihen.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -18,18 +17,12 @@
 
 #include "pspdebug.h"
 
-#include "minfwver.h"
-
 
 #define printf psvDebugScreenPrintf
-
-#define APP_PATH "ux0:app/MINFW0000/"
 
 #define WHITE  0x00FFFFFF
 #define YELLOW 0x0000FFFF
 
-
-static SceUID minfwver_kernel_id = -1, minfwver_user_id = -1;
 
 void firmware_string(char string[8], unsigned int version) {
 	char a = (version >> 24) & 0xf;
@@ -54,49 +47,23 @@ int main(int argc, char *argv[]) {
 	psvDebugScreenInit();
 	sceKernelPowerLock(0);
 
-	printf("-- Min Firmware Version Checker v1.1\n");
-	printf("   MinFWVer by Electric1447, factory firmware code by TheFloW\n\n");
-
-	if (sceIoDevctl("ux0:", 0x3001, NULL, 0, NULL, 0) == 0x80010030) {
-		printf("Enable unsafe homebrew first before using this software.\n");
-		
-		sceKernelDelayThread(5*1000*1000);
-
-		sceKernelPowerUnlock(0);
-		sceKernelExitProcess(0);
-	}
-
-	// Load modules
-	int search_unk[2];
-	
-	SceUID search_modid;
-	search_modid  = _vshKernelSearchModuleByName("minfwver_kernel", search_unk);
-	if (search_modid < 0) {
-		minfwver_kernel_id = taiLoadKernelModule(APP_PATH "minfwver_kernel.skprx", 0, NULL);
-		if (minfwver_kernel_id >= 0) {
-			int res = taiStartKernelModule(minfwver_kernel_id, 0, NULL, 0, NULL, NULL);
-			if (res < 0)
-				taiStopUnloadKernelModule(minfwver_kernel_id, 0, NULL, 0, NULL, NULL);
-		}
-	}
-	
-	minfwver_user_id = sceKernelLoadStartModule(APP_PATH "minfwver_user.suprx", 0, NULL, 0, NULL, NULL);
-
+	printf("-- Min Firmware Version Checker v2.0\n");
+	printf("   MinFWVer by Electric1447\n\n");
 
 	SceKernelFwInfo fwinfo, fwinfo2;
+	int fwinfo3 = 0;
+	
 	fwinfo.size = sizeof(SceKernelFwInfo);
 	fwinfo2.size = sizeof(SceKernelFwInfo);
-	_vshSblGetSystemSwVersion(&fwinfo);
-	sceKernelGetSystemSwVersion(&fwinfo2);
+	
+	sceKernelGetSystemSwVersion(&fwinfo);
+	_vshSblGetSystemSwVersion(&fwinfo2);
+	_vshSblAimgrGetSMI(&fwinfo3);
 
-	unsigned int current_version = (unsigned int)fwinfo.version;
-	unsigned int factory_version = minfwver_get_factory_firmware();
-	unsigned int spoofed_version = (unsigned int)fwinfo2.version;;
-
-	char current_fw[8], factory_fw[8], spoofed_fw[8];
-	firmware_string(current_fw, current_version);
-	firmware_string(factory_fw, factory_version);
-	firmware_string(spoofed_fw, spoofed_version);
+	char spoofed_fw[8], current_fw[8], factory_fw[8];
+	firmware_string(spoofed_fw, (unsigned int)fwinfo.version);
+	firmware_string(current_fw, (unsigned int)fwinfo2.version);
+	firmware_string(factory_fw, (unsigned int)fwinfo3);
 
 	printf("Firmware information:\n");
 	printf(" - Spoofed firmware: ");
