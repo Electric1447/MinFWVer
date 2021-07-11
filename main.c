@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
 			break;
 	}
 
-    sceShellUtilUnlock(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
+	sceShellUtilUnlock(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
 	sceKernelPowerUnlock(0);
 	sceKernelExitProcess(0);
 	return 0;
