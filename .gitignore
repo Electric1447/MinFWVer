@@ -49,6 +49,7 @@ imgui.ini
 Makefile
 CMakeCache.txt
 *.cmake
+/build
 
 #no idea
 config.yml

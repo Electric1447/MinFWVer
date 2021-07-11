@@ -1,5 +1,5 @@
 /* 
- * Copyright (C) 2019 TheFloW
+ * Copyright (C) 2021 Electric1447
  *
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE file for details.
@@ -10,6 +10,7 @@
 #include <psp2/ctrl.h>
 #include <psp2/vshbridge.h>
 #include <psp2/kernel/modulemgr.h>
+#include <psp2/shellutil.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -46,8 +47,10 @@ void firmware_string(char string[8], unsigned int version) {
 int main(int argc, char *argv[]) {
 	psvDebugScreenInit();
 	sceKernelPowerLock(0);
+	sceShellUtilInitEvents(0);
+	sceShellUtilLock(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
 
-	printf("-- Min Firmware Version Checker v2.0\n");
+	printf("-- Min Firmware Version Checker v2.1\n");
 	printf("   MinFWVer by Electric1447\n\n");
 
 	SceKernelFwInfo fwinfo, fwinfo2;
@@ -60,20 +63,18 @@ int main(int argc, char *argv[]) {
 	_vshSblGetSystemSwVersion(&fwinfo2);
 	_vshSblAimgrGetSMI(&fwinfo3);
 
-	char spoofed_fw[8], current_fw[8], factory_fw[8];
-	firmware_string(spoofed_fw, (unsigned int)fwinfo.version);
-	firmware_string(current_fw, (unsigned int)fwinfo2.version);
+	char factory_fw[8];
 	firmware_string(factory_fw, (unsigned int)fwinfo3);
 
 	printf("Firmware information:\n");
 	printf(" - Spoofed firmware: ");
 	psvDebugScreenSetTextColor(YELLOW);
-	printf("%s", spoofed_fw);
+	printf("%s", fwinfo.versionString);
 	psvDebugScreenSetTextColor(WHITE);
 	printf("\n");
 	printf(" - Current firmware: ");
 	psvDebugScreenSetTextColor(YELLOW);
-	printf("%s", current_fw);
+	printf("%s", fwinfo2.versionString);
 	psvDebugScreenSetTextColor(WHITE);
 	printf("\n");
 	printf(" - Factory firmware: ");
@@ -93,6 +94,7 @@ int main(int argc, char *argv[]) {
 			break;
 	}
 
+    sceShellUtilUnlock(SCE_SHELL_UTIL_LOCK_TYPE_PS_BTN);
 	sceKernelPowerUnlock(0);
 	sceKernelExitProcess(0);
 	return 0;

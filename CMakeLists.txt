@@ -13,7 +13,7 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "MinFWVer")
 set(VITA_TITLEID  "MINFW0000")
-set(VITA_VERSION  "02.00")
+set(VITA_VERSION  "02.10")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-q -Wall -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti -fno-exceptions")
@@ -28,6 +28,7 @@ target_link_libraries(minfwver
 	SceCtrl_stub
 	SceDisplay_stub
 	SceVshBridge_stub
+	SceShellSvc_stub 
 )
 
 vita_create_self(eboot.bin minfwver UNSAFE)
